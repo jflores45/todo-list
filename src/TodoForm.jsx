@@ -1,13 +1,11 @@
 
 
 function TodoForm (){
-
     return (
-
         <form>
             <label htmlFor="TodoTitle">Todo</label>
             <input id="todoTitle"></input>
-            <button>Add Todo</button>
+            <button type="button">Add Todo</button>
         </form>
     );
 }
