@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+
 function TodosViewForm({
     sortDirection,
     setSortDirection,
@@ -6,6 +8,17 @@ function TodosViewForm({
     queryString,
     setQueryString,
   }) {
+    const [localQueryString, setLocalQueryString] = useState(queryString);
+
+    useEffect(() => {
+        const debounce = setTimeout(() => {
+            setQueryString(localQueryString);
+        }, 500);
+
+        return () => clearTimeout(debounce);
+
+    }, [localQueryString, setQueryString]);
+
     const preventRefresh = (e) => {
       e.preventDefault();
     };
@@ -17,15 +30,15 @@ function TodosViewForm({
           <input
             id="search"
             type="text"
-            value={queryString}
+            value={localQueryString}
             onChange={(e) => {
-              setQueryString(e.target.value);
+                setLocalQueryString(e.target.value);
             }}
           />
           <button
             type="button"
             onClick={() => {
-              setQueryString("");
+                setLocalQueryString("");
             }}
           >
             Clear

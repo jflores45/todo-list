@@ -1,22 +1,11 @@
 import './App.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import TodoList from './features/TodoList/TodoList';
 import TodoForm from './features/TodoForm';
 import TodosViewForm from './features/TodoViewForm';
 
 const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
 
-
-const encodeUrl = ({ sortField, sortDirection, queryString }) => {
-  let searchQuery = "";
-  let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
-
-  if (queryString) {
-    searchQuery = `&filterByFormula=SEARCH("${queryString}",+title)`;
-  }
-
-  return encodeURI(`${url}?${sortQuery}${searchQuery}`);
-};
 function App() {
   const [todoList, setTodoList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -27,6 +16,18 @@ function App() {
   const [queryString, setQueryString] = useState("");
   
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
+
+  const encodeUrl = useCallback(() => {
+    let searchQuery = "";
+    let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
+  
+    if (queryString) {
+      searchQuery = `&filterByFormula=SEARCH("${queryString}",+title)`;
+    }
+  
+    return encodeURI(`${url}?${sortQuery}${searchQuery}`);
+  }, [sortField, sortDirection, queryString]);
+  
 
   const airtableHeaders = {
     Authorization: token,
@@ -64,7 +65,7 @@ function App() {
         };
   
         try {
-          const resp = await fetch(encodeUrl({ sortField, sortDirection, queryString}), options);
+          const resp = await fetch(encodeUrl(), options);
 
 
           if (!resp.ok){
@@ -101,17 +102,6 @@ function App() {
   const updateTodo = async (editedTodo) => {
     const originalTodo = todoList.find((todo) => todo.id === editedTodo.id);
     
-    // const payload = {
-    //     records: [
-    //         {
-    //             id: editedTodo.id,
-    //             fields: {
-    //                 title: editedTodo.title,
-    //                 isCompleted: editedTodo.isCompleted,
-    //             },
-    //         },
-    //     ],
-    // };
     const payload = buildPayload(editedTodo, true);
 
     const options = {
@@ -122,7 +112,7 @@ function App() {
 
     try {
         setIsSaving(true);
-        const resp = await fetch(encodeUrl({ sortField, sortDirection, queryString }), options);
+        const resp = await fetch(encodeUrl(), options);
         
         if (!resp.ok) {
           throw new Error("Failed to update todo");
@@ -144,17 +134,7 @@ function App() {
 
   const addTodo = async (newTodo) => {
 
-    // const payload = {
-    //     records: [
-    //       {
-    //         fields: {
-    //           title: newTodo.title,
-    //           isCompleted: newTodo.isCompleted,
-    //         },
-    //       },
-    //     ],
-    // }; 
-    const payload = buildPayload(newTodo);
+  const payload = buildPayload(newTodo);
 
     const options = {
       method: 'POST',
@@ -164,7 +144,7 @@ function App() {
 
     try {
       setIsSaving(true);
-      const resp = await fetch(encodeUrl({ sortField, sortDirection, queryString }), options);
+      const resp = await fetch(encodeUrl(), options);
 
       if (!resp.ok){
         throw new Error("Failed to POST");
@@ -197,20 +177,7 @@ function App() {
 
     setTodoList(updateTodos);
 
-    // const payload = {
-    //   records: [
-    //     {
-    //       id,
-    //       fields: {
-    //         title: originalTodo.title,
-    //         isCompleted: true,
-    //       },
-    //     },
-    //   ],
-    // };
     const payload = buildPayload({ ...originalTodo, isCompleted: true }, true);
-
-    // const payload = buildPayload(originalTodo, true);
 
     const options = {
       method: "PATCH",
@@ -219,7 +186,7 @@ function App() {
     };
   
     try {
-      const resp = await fetch(encodeUrl({ sortField, sortDirection, queryString }), options);
+      const resp = await fetch(encodeUrl(), options);
   
       if (!resp.ok) {
         throw new Error("Failed to complete todo");
