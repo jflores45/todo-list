@@ -1,5 +1,61 @@
-body {
-  /* background-color: black;
-  color: white; */
-  font-size: medium;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+* {
+  box-sizing: border-box;
 }
+
+body {
+  margin: 0;
+  background-color: #0b0b0b;
+  color: #e5e7eb;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+
+input,
+select {
+  background-color: #141414;
+  color: #e5e7eb;
+  border: 1px solid #262626;
+  border-radius: 6px;
+  padding: 8px 10px;
+  outline: none;
+  transition: border 0.15s ease, box-shadow 0.15s ease;
+}
+
+input::placeholder {
+  color: #6b7280;
+}
+
+input:focus,
+select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px #3b82f6;
+}
+
+button {
+  background-color: #141414;
+  color: #e5e7eb;
+  border: 1px solid #262626;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+button:hover:not(:disabled) {
+  background-color: #1b1b1b;
+}
+

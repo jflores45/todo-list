@@ -1,0 +1,23 @@
+.app {
+    min-height: 80vh;
+    /* display: flex; */
+    /* justify-content: center; */
+    align-items: center;
+    background: #0b0b0b;
+    color: #e5e7eb;
+    padding: 20px;
+    border: 1px solid rgb(30, 29, 29);
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  .container {
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .error {
+    padding: 12px;
+    margin-top: 16px;
+    border-radius: 6px;
+  }
+  

@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import TodoList from './features/TodoList/TodoList';
 import TodoForm from './features/TodoForm';
 import TodosViewForm from './features/TodoViewForm';
+import styles from './App.module.css';
 
 const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
 
@@ -204,21 +205,22 @@ function App() {
   }
 
   return (
-        <div>
+        <div className={styles.app}>
             <h1>My Todos</h1>
             <TodoForm onAddTodo={addTodo} isSaving={isSaving}/>
             <TodoList todoList={todoList} isLoading={isLoading} onCompleteTodo={completeTodo} onUpdateTodo={updateTodo} />
-            <hr/>
+            {/* <hr/> */}
             <TodosViewForm sortDirection={sortDirection} setSortDirection={setSortDirection} sortField={sortField} setSortField={setSortField} queryString={queryString} setQueryString={setQueryString}/>
             {errorMessage ? (
-              <>
+              <div className={styles.error}>
                   <hr/>
                   <p>{errorMessage}</p>
                   <button onClick={() => setErrorMessage("")}>dismiss</button>
-              </>
+              </div>
               ) : null}
         </div>
   );
 }
 
 export default App
+
